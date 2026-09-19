@@ -308,7 +308,7 @@ function complementFor(verb) {
 }
 
 function selectVerbFor(tenseKey) {
-  const awkwardEverywhere = new Set(["grow", "rise"]);
+  const awkwardEverywhere = new Set(["grow", "rise", "stop"]);
   const awkwardContinuous = new Set(["feel", "love", "see", "understand"]);
   return randomChoice(
     VERBS.filter((verb) => {
@@ -647,7 +647,7 @@ function makeFutureSimple(type) {
   const correct = `will ${verb.base}`;
   const explanation = "Future Simple uses will + base verb. Use won't + base verb for negatives.";
   const phrase = randomChoice(FUTURE_PHRASES);
-  const wrongPool = uniq([verb.base, verb.s, verb.past, `will ${verb.past}`, `is ${verb.ing}`]).filter((c) => c !== correct);
+  const wrongPool = uniq([verb.base, verb.s, verb.past, `will ${verb.past}`]).filter((c) => c !== correct);
 
   if (type === "mcq") {
     const options = shuffleArray([correct, ...sampleN(wrongPool, 3)]);
