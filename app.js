@@ -98,6 +98,10 @@ function renderQuestion() {
     questionInstructionEl.textContent = "Type the correct verb form";
     questionTextEl.textContent = q.question;
     renderFillInput();
+  } else if (q.type === "formQuestion") {
+    questionInstructionEl.textContent = "Form the question";
+    questionTextEl.textContent = q.question;
+    renderFillInput("Type the full question here...");
   } else if (q.type === "comprehension") {
     questionInstructionEl.textContent = "Read and choose the correct answer";
     questionTextEl.textContent = q.question;
@@ -130,11 +134,11 @@ function renderOptions(options, correctAnswer) {
   });
 }
 
-function renderFillInput() {
+function renderFillInput(placeholder = "Type your answer here...") {
   const input = document.createElement("input");
   input.type = "text";
   input.className = "fill-input";
-  input.placeholder = "Type your answer here...";
+  input.placeholder = placeholder;
   input.addEventListener("input", () => {
     if (input.value.trim().length > 0) {
       recordAnswer(input.value, null, true);
@@ -157,7 +161,7 @@ function evaluateCurrentQuestion() {
   let isCorrect = false;
   let givenAnswer = pending ? pending.givenAnswer : "";
 
-  if (q.type === "fill") {
+  if (q.type === "fill" || q.type === "formQuestion") {
     const candidates = q.acceptable && q.acceptable.length ? q.acceptable : [q.answer];
     isCorrect = candidates.some((c) => normalize(c) === normalize(givenAnswer));
   } else {

@@ -9,6 +9,7 @@ const TENSES = {
   presentContinuous: "Present Continuous",
   pastSimple: "Past Simple",
   pastContinuous: "Past Continuous",
+  futureSimple: "Future Simple",
 };
 
 const VERBS = [
@@ -211,6 +212,7 @@ const PS_PHRASES = ["every day", "every morning", "every weekend", "on Saturdays
 const PC_PHRASES = ["right now", "at the moment", "today"];
 const PAST_PHRASES = ["yesterday", "last week", "last weekend", "a few days ago", "last Friday", "after school", "in the evening"];
 const PAST_CONT_EVENTS = ["the phone rang", "it started to rain", "someone walked in", "the lights went out", "someone came home", "the bell rang", "someone knocked on the door", "the music stopped", "it began to snow", "the lesson started"];
+const FUTURE_PHRASES = ["tomorrow", "next week", "next weekend", "soon", "after school", "in the evening"];
 
 const READING_PASSAGES = [
   {
@@ -261,6 +263,14 @@ const READING_PASSAGES = [
     answer: "Behind a big rock",
     explanation: "The passage says the wand was behind a big rock.",
   },
+  {
+    tense: "futureSimple",
+    passage: "Tomorrow Ben will visit a small island. He will take his goggles and a map, but he will not take his bike.",
+    question: "What will Ben take tomorrow?",
+    options: ["His goggles and a map", "His bike", "A football", "A red jacket"],
+    answer: "His goggles and a map",
+    explanation: "The passage says Ben will take his goggles and a map.",
+  },
 ];
 
 function randomChoice(arr) {
@@ -289,6 +299,10 @@ function lowerSubject(subject) {
   return subject.text.charAt(0).toLowerCase() + subject.text.slice(1);
 }
 
+function capitalizeFirst(text) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
 function complementFor(verb) {
   return VERB_COMPLEMENTS[verb.base] || "";
 }
@@ -309,6 +323,53 @@ function isRegularPast(verb) {
   const b = verb.base;
   const candidates = [b + "ed", b.endsWith("e") ? b + "d" : null, b.replace(/y$/, "ied"), b + b.slice(-1) + "ed"].filter(Boolean);
   return candidates.includes(verb.past);
+}
+
+function makeFormQuestion(tenseKey) {
+  const subject = randomChoice(SUBJECTS);
+  const verb = selectVerbFor(tenseKey);
+  const subjLower = lowerSubject(subject);
+  const complement = complementFor(verb);
+  let answer;
+  let prompt;
+  let explanation;
+
+  if (tenseKey === "presentSimple") {
+    const phrase = randomChoice(PS_PHRASES);
+    answer = `${capitalizeFirst(subject.cat.doAux)} ${subjLower} ${verb.base}${complement} ${phrase}?`;
+    prompt = `${subject.text} / ${verb.base}${complement} / ${phrase}`;
+    explanation = "Present Simple questions use Do/Does + subject + base verb.";
+  } else if (tenseKey === "presentContinuous") {
+    const phrase = randomChoice(PC_PHRASES);
+    answer = `${capitalizeFirst(subject.cat.be)} ${subjLower} ${verb.ing}${complement} ${phrase}?`;
+    prompt = `${subject.text} / ${verb.base}${complement} / ${phrase}`;
+    explanation = "Present Continuous questions use Am/Is/Are + subject + verb-ing.";
+  } else if (tenseKey === "pastSimple") {
+    const phrase = randomChoice(PAST_PHRASES);
+    answer = `Did ${subjLower} ${verb.base}${complement} ${phrase}?`;
+    prompt = `${subject.text} / ${verb.base}${complement} / ${phrase}`;
+    explanation = "Past Simple questions use Did + subject + base verb.";
+  } else if (tenseKey === "pastContinuous") {
+    const event = randomChoice(PAST_CONT_EVENTS);
+    answer = `${capitalizeFirst(subject.cat.wasWere)} ${subjLower} ${verb.ing}${complement} when ${event}?`;
+    prompt = `${subject.text} / ${verb.base}${complement} / when ${event}`;
+    explanation = "Past Continuous questions use Was/Were + subject + verb-ing.";
+  } else {
+    const phrase = randomChoice(FUTURE_PHRASES);
+    answer = `Will ${subjLower} ${verb.base}${complement} ${phrase}?`;
+    prompt = `${subject.text} / ${verb.base}${complement} / ${phrase}`;
+    explanation = "Future Simple questions use Will + subject + base verb.";
+  }
+
+  return {
+    tense: tenseKey,
+    type: "formQuestion",
+    question: `Make a question: ${prompt}`,
+    answer,
+    acceptable: [answer],
+    explanation,
+    sig: `formQuestion|${tenseKey}|${prompt}`,
+  };
 }
 
 // ---------------- PRESENT SIMPLE ----------------
@@ -578,11 +639,72 @@ function makePastContinuous(type) {
   };
 }
 
+// ---------------- FUTURE SIMPLE ----------------
+
+function makeFutureSimple(type) {
+  const subject = randomChoice(SUBJECTS);
+  const verb = selectVerbFor("futureSimple");
+  const correct = `will ${verb.base}`;
+  const explanation = "Future Simple uses will + base verb. Use won't + base verb for negatives.";
+  const phrase = randomChoice(FUTURE_PHRASES);
+  const wrongPool = uniq([verb.base, verb.s, verb.past, `will ${verb.past}`, `is ${verb.ing}`]).filter((c) => c !== correct);
+
+  if (type === "mcq") {
+    const options = shuffleArray([correct, ...sampleN(wrongPool, 3)]);
+    return {
+      tense: "futureSimple", type: "mcq",
+      question: `${subject.text} ___${complementFor(verb)} ${phrase}.`,
+      options, answer: correct, explanation,
+      sig: `futureSimple|mcq|${subject.text}|${verb.base}|${phrase}`,
+    };
+  }
+
+  if (type === "fill") {
+    const mode = randomChoice(["affirmative", "negative", "question"]);
+    if (mode === "negative") {
+      const answer = `won't ${verb.base}`;
+      return {
+        tense: "futureSimple", type: "fill",
+        question: `${subject.text} ___ (not / ${verb.base})${complementFor(verb)} ${phrase}.`,
+        answer, acceptable: [answer, `will not ${verb.base}`], explanation,
+        sig: `futureSimple|fill-neg|${subject.text}|${verb.base}|${phrase}`,
+      };
+    }
+    if (mode === "question") {
+      const subjLower = lowerSubject(subject);
+      const answer = `will ${subjLower} ${verb.base}`;
+      return {
+        tense: "futureSimple", type: "fill",
+        question: `___ ${subjLower} ___ (${verb.base})${complementFor(verb)} ${phrase}?`,
+        answer, acceptable: [answer], explanation: "Future Simple questions use Will + subject + base verb.",
+        sig: `futureSimple|fill-q|${subject.text}|${verb.base}|${phrase}`,
+      };
+    }
+    return {
+      tense: "futureSimple", type: "fill",
+      question: `${subject.text} ___ (${verb.base})${complementFor(verb)} ${phrase}.`,
+      answer: correct, acceptable: [correct], explanation,
+      sig: `futureSimple|fill-aff|${subject.text}|${verb.base}|${phrase}`,
+    };
+  }
+
+  const correctSentence = `${subject.text} ${correct}${complementFor(verb)} ${phrase}.`;
+  const wrongSentences = sampleN(wrongPool, 3).map((form) => `${subject.text} ${form}${complementFor(verb)} ${phrase}.`);
+  return {
+    tense: "futureSimple", type: "correction",
+    brokenSentence: wrongSentences[0],
+    options: shuffleArray([correctSentence, ...wrongSentences]),
+    answer: correctSentence, explanation,
+    sig: `futureSimple|corr|${subject.text}|${verb.base}|${phrase}`,
+  };
+}
+
 const TENSE_BUILDERS = {
   presentSimple: makePresentSimple,
   presentContinuous: makePresentContinuous,
   pastSimple: makePastSimple,
   pastContinuous: makePastContinuous,
+  futureSimple: makeFutureSimple,
 };
 
 function makeComprehensionQuestion(tenseKey) {
@@ -600,9 +722,9 @@ function makeComprehensionQuestion(tenseKey) {
   };
 }
 
-const DRILL_QUESTION_TYPES = ["mcq", "fill", "correction"];
-const QUESTION_TYPES = ["mcq", "fill", "correction", "comprehension"];
-const RANDOM_QUESTION_TYPES = ["mcq", "fill", "correction", "mcq", "fill", "correction", "comprehension"];
+const DRILL_QUESTION_TYPES = ["mcq", "fill", "correction", "formQuestion"];
+const QUESTION_TYPES = ["mcq", "fill", "correction", "formQuestion", "comprehension"];
+const RANDOM_QUESTION_TYPES = ["mcq", "fill", "correction", "formQuestion", "mcq", "fill", "correction", "comprehension"];
 
 // tenseFilter is kept for flexibility; the app passes null so every session is mixed.
 function generateQuestions(tenseFilter, count) {
@@ -630,7 +752,9 @@ function generateQuestions(tenseFilter, count) {
     }
     const q = type === "comprehension"
       ? makeComprehensionQuestion(tenseKey)
-      : TENSE_BUILDERS[tenseKey](type);
+      : type === "formQuestion"
+        ? makeFormQuestion(tenseKey)
+        : TENSE_BUILDERS[tenseKey](type);
     if (seen.has(q.sig)) continue;
     seen.add(q.sig);
     delete q.sig;
