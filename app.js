@@ -98,7 +98,19 @@ function renderQuestion() {
     questionInstructionEl.textContent = "Type the correct verb form";
     questionTextEl.textContent = q.question;
     renderFillInput();
+  } else if (q.type === "comprehension") {
+    questionInstructionEl.textContent = "Read and choose the correct answer";
+    questionTextEl.textContent = q.question;
+    renderPassage(q.passage);
+    renderOptions(q.options, q.answer);
   }
+}
+
+function renderPassage(text) {
+  const passage = document.createElement("div");
+  passage.className = "passage-card";
+  passage.textContent = text;
+  answerAreaEl.appendChild(passage);
 }
 
 function renderOptions(options, correctAnswer) {

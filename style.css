@@ -181,6 +181,17 @@ body {
   margin-bottom: 22px;
 }
 
+.passage-card {
+  background: #eef9ff;
+  border-left: 6px solid var(--accent-2);
+  border-radius: 12px;
+  color: #344;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 14px 16px;
+  text-align: left;
+}
+
 .option-btn {
   background: #f2f2fb;
   border: 2px solid transparent;
@@ -313,7 +324,8 @@ body {
   }
 
   .option-btn,
-  .fill-input {
+  .fill-input,
+  .passage-card {
     font-size: 0.96rem;
     padding: 12px 14px;
   }

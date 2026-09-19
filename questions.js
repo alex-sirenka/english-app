@@ -97,86 +97,86 @@ const VERBS = [
 
 const VERB_COMPLEMENTS = {
   play: " football",
-  watch: " a movie",
-  work: " on a project",
-  clean: " the room",
-  cook: " dinner",
+  watch: " the fish",
+  work: " on a little boat",
+  clean: " the goggles",
+  cook: " fish soup",
   study: " English",
-  walk: " to school",
-  talk: " to a friend",
-  listen: " to music",
-  visit: " grandma",
-  open: " the window",
-  close: " the door",
+  walk: " along the shore",
+  talk: " to a friend on the beach",
+  listen: " to the waves",
+  visit: " a small island",
+  open: " the hut door",
+  close: " the yellow box",
   help: " my friend",
-  wash: " the dishes",
-  wait: " for the bus",
-  finish: " homework",
-  start: " the lesson",
-  stop: " the game",
-  plan: " a trip",
-  dance: " at the party",
-  jump: " over the puddle",
-  climb: " the hill",
-  paint: " a picture",
+  wash: " the flippers",
+  wait: " for the boat",
+  finish: " the map",
+  start: " the adventure",
+  stop: " near the rocks",
+  plan: " an island trip",
+  dance: " on the sand",
+  jump: " into the water",
+  climb: " a coconut tree",
+  paint: " a bright fish",
   smile: " at the camera",
-  laugh: " at the joke",
-  travel: " to London",
-  carry: " a heavy bag",
-  try: " a new sport",
-  cry: " during the film",
-  call: " a friend",
-  live: " in a small town",
-  love: " this song",
-  use: " a tablet",
-  move: " the chair",
-  arrive: " at school",
-  learn: " new words",
+  laugh: " at the funny crab",
+  travel: " to a little island",
+  carry: " a beach bag",
+  try: " the flippers",
+  cry: " near the wet towel",
+  call: " from the shore",
+  live: " near the sea",
+  love: " the blue water",
+  use: " a map",
+  move: " the towel",
+  arrive: " at the island",
+  learn: " sea words",
   teach: " English",
   speak: " English",
-  sing: " a song",
-  go: " to the park",
-  do: " homework",
-  have: " breakfast",
-  eat: " pizza",
-  drink: " water",
-  run: " in the park",
-  swim: " in the pool",
-  ride: " a bike",
-  drive: " to school",
-  see: " a rainbow",
-  buy: " a book",
-  bring: " a present",
-  make: " a cake",
-  take: " a photo",
-  give: " a gift",
-  send: " a message",
-  build: " a model",
-  draw: " a picture",
-  break: " a glass",
+  sing: " a sea song",
+  go: " to the beach",
+  do: " a treasure hunt",
+  have: " a lovely swim",
+  eat: " coconut cake",
+  drink: " cold juice",
+  run: " across the sand",
+  swim: " under the waves",
+  ride: " in a yellow boat",
+  drive: " to the beach",
+  see: " a dolphin",
+  buy: " a postcard",
+  bring: " a towel",
+  make: " a sandcastle",
+  take: " a photo of the sea",
+  give: " a shell to a friend",
+  send: " a postcard",
+  build: " a sandcastle",
+  draw: " a sea turtle",
+  break: " a shell",
   feel: " happy",
-  fall: " on the grass",
-  grow: " tomatoes",
-  keep: " a diary",
-  leave: " the house",
-  lose: " the keys",
-  meet: " a friend",
-  pay: " for lunch",
-  ring: " the bell",
-  rise: " early",
-  sell: " lemonade",
-  sit: " on the sofa",
-  sleep: " on the sofa",
-  stand: " near the window",
-  tell: " a story",
-  think: " about the answer",
-  throw: " a ball",
-  understand: " the rule",
-  wear: " a red jacket",
-  win: " the match",
-  write: " a story",
+  fall: " into the warm sand",
+  grow: " palm trees",
+  keep: " a shell collection",
+  leave: " the island",
+  lose: " the magic wand",
+  meet: " a friendly dolphin",
+  pay: " for ice cream",
+  ring: " the little bell",
+  rise: " above the waves",
+  sell: " lemonade on the beach",
+  sit: " under a palm tree",
+  sleep: " in the beach hut",
+  stand: " near the water",
+  tell: " a sea story",
+  think: " about the island",
+  throw: " a shell into the sea",
+  understand: " the map",
+  wear: " swimming goggles",
+  win: " the beach game",
+  write: " a postcard",
   fly: " a kite",
-  catch: " the ball",
+  catch: " a little fish",
 };
 
 const CAT_I = { be: "am", wasWere: "was", doAux: "do", doNeg: "don't", verbForm: (v) => v.base };
@@ -212,6 +212,57 @@ const PC_PHRASES = ["right now", "at the moment", "today"];
 const PAST_PHRASES = ["yesterday", "last week", "last weekend", "a few days ago", "last Friday", "after school", "in the evening"];
 const PAST_CONT_EVENTS = ["the phone rang", "it started to rain", "someone walked in", "the lights went out", "someone came home", "the bell rang", "someone knocked on the door", "the music stopped", "it began to snow", "the lesson started"];
 
+const READING_PASSAGES = [
+  {
+    tense: "pastSimple",
+    passage: "Mira found a tiny island with golden sand and tall palm trees. She packed her goggles, took a map, and walked to the beach hut.",
+    question: "What did Mira take with her?",
+    options: ["A map", "A football", "A red jacket", "A cake"],
+    answer: "A map",
+    explanation: "The passage says she took a map.",
+  },
+  {
+    tense: "pastContinuous",
+    passage: "Sam was swimming under the waves when he saw a green turtle. His sister was taking photos from the little yellow boat.",
+    question: "What was Sam doing when he saw the turtle?",
+    options: ["He was swimming", "He was sleeping", "He was cooking", "He was writing"],
+    answer: "He was swimming",
+    explanation: "The action in progress was: Sam was swimming.",
+  },
+  {
+    tense: "presentSimple",
+    passage: "Lena loves the sea. Every weekend she watches the fish, listens to the waves, and writes new words in her notebook.",
+    question: "What does Lena write in her notebook?",
+    options: ["New words", "A shopping list", "A song", "A map"],
+    answer: "New words",
+    explanation: "The passage says she writes new words in her notebook.",
+  },
+  {
+    tense: "presentContinuous",
+    passage: "Look! The children are building a sandcastle. Their parents are sitting under a palm tree and watching the blue sea.",
+    question: "What are the children building?",
+    options: ["A sandcastle", "A submarine", "A beach hut", "A boat"],
+    answer: "A sandcastle",
+    explanation: "The passage says the children are building a sandcastle.",
+  },
+  {
+    tense: "pastSimple",
+    passage: "The little cat hated the cold water, so it climbed a coconut tree. Later, it slept in the warm sun.",
+    question: "Why did the cat climb the tree?",
+    options: ["It hated the cold water", "It wanted a postcard", "It lost a shell", "It saw a rainbow"],
+    answer: "It hated the cold water",
+    explanation: "The cat climbed the tree because it hated the cold water.",
+  },
+  {
+    tense: "pastContinuous",
+    passage: "Nina was looking for her silver wand when the bell rang. It was behind a big rock near the shore.",
+    question: "Where was the wand?",
+    options: ["Behind a big rock", "In a school bag", "On a bus", "Under a bed"],
+    answer: "Behind a big rock",
+    explanation: "The passage says the wand was behind a big rock.",
+  },
+];
+
 function randomChoice(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
@@ -242,6 +293,18 @@ function complementFor(verb) {
   return VERB_COMPLEMENTS[verb.base] || "";
 }
 
+function selectVerbFor(tenseKey) {
+  const awkwardEverywhere = new Set(["grow", "rise"]);
+  const awkwardContinuous = new Set(["feel", "love", "see", "understand"]);
+  return randomChoice(
+    VERBS.filter((verb) => {
+      if (awkwardEverywhere.has(verb.base)) return false;
+      if ((tenseKey === "presentContinuous" || tenseKey === "pastContinuous") && awkwardContinuous.has(verb.base)) return false;
+      return true;
+    })
+  );
+}
+
 function isRegularPast(verb) {
   const b = verb.base;
   const candidates = [b + "ed", b.endsWith("e") ? b + "d" : null, b.replace(/y$/, "ied"), b + b.slice(-1) + "ed"].filter(Boolean);
@@ -258,7 +321,7 @@ function explainPresentSimple(subject) {
 
 function makePresentSimple(type) {
   const subject = randomChoice(SUBJECTS);
-  const verb = randomChoice(VERBS);
+  const verb = selectVerbFor("presentSimple");
   const correct = subject.cat.verbForm(verb);
   const explanation = explainPresentSimple(subject);
   const phrase = randomChoice(PS_PHRASES);
@@ -328,7 +391,7 @@ function presentContinuousFrame() {
 
 function makePresentContinuous(type) {
   const subject = randomChoice(SUBJECTS);
-  const verb = randomChoice(VERBS);
+  const verb = selectVerbFor("presentContinuous");
   const correct = `${subject.cat.be} ${verb.ing}`;
   const explanation = `Use am/is/are + verb-ing (here: ${correct}) for actions happening now.`;
   const others = ["am", "is", "are"].filter((b) => b !== subject.cat.be);
@@ -394,7 +457,7 @@ function makePresentContinuous(type) {
 
 function makePastSimple(type) {
   const subject = randomChoice(SUBJECTS);
-  const verb = randomChoice(VERBS);
+  const verb = selectVerbFor("pastSimple");
   const correct = verb.past;
   const explanation = isRegularPast(verb)
     ? `Regular verbs add -ed for the Past Simple: ${verb.base} → ${verb.past}.`
@@ -457,7 +520,7 @@ function makePastSimple(type) {
 
 function makePastContinuous(type) {
   const subject = randomChoice(SUBJECTS);
-  const verb = randomChoice(VERBS);
+  const verb = selectVerbFor("pastContinuous");
   const correct = `${subject.cat.wasWere} ${verb.ing}`;
   const explanation = `Use was/were + verb-ing (here: ${correct}) for an action in progress in the past.`;
   const event = randomChoice(PAST_CONT_EVENTS);
@@ -522,7 +585,24 @@ const TENSE_BUILDERS = {
   pastContinuous: makePastContinuous,
 };
 
-const QUESTION_TYPES = ["mcq", "fill", "correction"];
+function makeComprehensionQuestion(tenseKey) {
+  const matching = READING_PASSAGES.filter((passage) => passage.tense === tenseKey);
+  const source = randomChoice(matching.length ? matching : READING_PASSAGES);
+  return {
+    tense: source.tense,
+    type: "comprehension",
+    passage: source.passage,
+    question: source.question,
+    options: shuffleArray(source.options),
+    answer: source.answer,
+    explanation: source.explanation,
+    sig: `comprehension|${source.question}`,
+  };
+}
+
+const DRILL_QUESTION_TYPES = ["mcq", "fill", "correction"];
+const QUESTION_TYPES = ["mcq", "fill", "correction", "comprehension"];
+const RANDOM_QUESTION_TYPES = ["mcq", "fill", "correction", "mcq", "fill", "correction", "comprehension"];
 
 // tenseFilter is kept for flexibility; the app passes null so every session is mixed.
 function generateQuestions(tenseFilter, count) {
@@ -534,16 +614,23 @@ function generateQuestions(tenseFilter, count) {
   let attempts = 0;
 
   if (!tenseFilter) {
-    tenseKeys.forEach((tenseKey) => planned.push({ tenseKey, type: randomChoice(QUESTION_TYPES) }));
+    tenseKeys.forEach((tenseKey) => planned.push({ tenseKey, type: randomChoice(DRILL_QUESTION_TYPES) }));
     QUESTION_TYPES.forEach((type) => planned.push({ tenseKey: randomChoice(tenseKeys), type }));
   }
+
+  const maxComprehension = count >= 18 ? 3 : 2;
 
   while (result.length < count && attempts < maxAttempts) {
     attempts += 1;
     const next = planned.shift();
     const tenseKey = next ? next.tenseKey : randomChoice(tenseKeys);
-    const type = next ? next.type : randomChoice(QUESTION_TYPES);
-    const q = TENSE_BUILDERS[tenseKey](type);
+    let type = next ? next.type : randomChoice(RANDOM_QUESTION_TYPES);
+    if (type === "comprehension" && result.filter((q) => q.type === "comprehension").length >= maxComprehension) {
+      type = randomChoice(DRILL_QUESTION_TYPES);
+    }
+    const q = type === "comprehension"
+      ? makeComprehensionQuestion(tenseKey)
+      : TENSE_BUILDERS[tenseKey](type);
     if (seen.has(q.sig)) continue;
     seen.add(q.sig);
     delete q.sig;
