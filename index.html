@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Tenses Challenge</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <h1>ДЛЯ УЛЬЯНЫ - НЕ ЗАПОРИ!</h1>
+      <p class="subtitle">Present &amp; Past — Simple &amp; Continuous</p>
+    </header>
+
+    <!-- START SCREEN -->
+    <section id="start-screen" class="screen">
+      <div class="card">
+        <p class="big-emoji">🎲📚🚀</p>
+        <p class="intro-text">
+          Press the button and a surprise quiz or test will be picked for you!
+        </p>
+        <button id="start-btn" class="btn btn-primary">▶ START</button>
+        <div id="picking" class="picking hidden">
+          <p>Picking your challenge<span class="dots">...</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUIZ SCREEN -->
+    <section id="quiz-screen" class="screen hidden">
+      <div class="quiz-meta">
+        <span id="quiz-title" class="badge"></span>
+        <span id="quiz-progress" class="progress-text"></span>
+      </div>
+      <div class="progress-bar">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+
+      <div class="card">
+        <p id="question-instruction" class="instruction"></p>
+        <h2 id="question-text" class="question-text"></h2>
+        <div id="answer-area" class="answer-area"></div>
+        <div class="nav-row">
+          <button id="next-btn" class="btn btn-primary" disabled>Next ➡</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESULTS SCREEN -->
+    <section id="results-screen" class="screen hidden">
+      <div class="card">
+        <h2 id="results-title">🎉 Results</h2>
+        <p id="results-score" class="results-score"></p>
+        <p id="results-comment" class="results-comment"></p>
+        <div id="results-review" class="results-review"></div>
+        <button id="restart-btn" class="btn btn-primary">🔁 Try Another Challenge</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
