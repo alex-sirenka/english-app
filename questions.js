@@ -726,9 +726,16 @@ const DRILL_QUESTION_TYPES = ["mcq", "fill", "correction", "formQuestion"];
 const QUESTION_TYPES = ["mcq", "fill", "correction", "formQuestion", "comprehension"];
 const RANDOM_QUESTION_TYPES = ["mcq", "fill", "correction", "formQuestion", "mcq", "fill", "correction", "comprehension"];
 
+function buildQuestion(tenseKey, type) {
+  if (type === "comprehension") return makeComprehensionQuestion(tenseKey);
+  if (type === "formQuestion") return makeFormQuestion(tenseKey);
+  return TENSE_BUILDERS[tenseKey](type);
+}
+
 // tenseFilter is kept for flexibility; the app passes null so every session is mixed.
-function generateQuestions(tenseFilter, count) {
+function generateQuestions(tenseFilter, count, options = {}) {
   const tenseKeys = tenseFilter ? [tenseFilter] : Object.keys(TENSES);
+  const focus = options.focus || null;
   const seen = new Set();
   const result = [];
   const planned = [];
@@ -741,24 +748,24 @@ function generateQuestions(tenseFilter, count) {
   }
 
   const maxComprehension = count >= 18 ? 3 : 2;
+  const maxFocused = Math.floor(count * 0.55);
+  let focusedCount = 0;
 
   while (result.length < count && attempts < maxAttempts) {
     attempts += 1;
     const next = planned.shift();
-    const tenseKey = next ? next.tenseKey : randomChoice(tenseKeys);
-    let type = next ? next.type : randomChoice(RANDOM_QUESTION_TYPES);
+    const canUseFocus = focus && focusedCount < maxFocused && Math.random() < 0.7;
+    const tenseKey = next ? next.tenseKey : canUseFocus ? focus.tense : randomChoice(tenseKeys);
+    let type = next ? next.type : canUseFocus ? focus.type : randomChoice(RANDOM_QUESTION_TYPES);
     if (type === "comprehension" && result.filter((q) => q.type === "comprehension").length >= maxComprehension) {
       type = randomChoice(DRILL_QUESTION_TYPES);
     }
-    const q = type === "comprehension"
-      ? makeComprehensionQuestion(tenseKey)
-      : type === "formQuestion"
-        ? makeFormQuestion(tenseKey)
-        : TENSE_BUILDERS[tenseKey](type);
+    const q = buildQuestion(tenseKey, type);
     if (seen.has(q.sig)) continue;
     seen.add(q.sig);
     delete q.sig;
     result.push(q);
+    if (focus && q.tense === focus.tense && q.type === focus.type) focusedCount += 1;
   }
   return result;
 }
