@@ -95,6 +95,90 @@ const VERBS = [
   ["catch", "catches", "catching", "caught"],
 ].map(([base, s, ing, past]) => ({ base, s, ing, past }));
 
+const VERB_COMPLEMENTS = {
+  play: " football",
+  watch: " a movie",
+  work: " on a project",
+  clean: " the room",
+  cook: " dinner",
+  study: " English",
+  walk: " to school",
+  talk: " to a friend",
+  listen: " to music",
+  visit: " grandma",
+  open: " the window",
+  close: " the door",
+  help: " my friend",
+  wash: " the dishes",
+  wait: " for the bus",
+  finish: " homework",
+  start: " the lesson",
+  stop: " the game",
+  plan: " a trip",
+  dance: " at the party",
+  jump: " over the puddle",
+  climb: " the hill",
+  paint: " a picture",
+  smile: " at the camera",
+  laugh: " at the joke",
+  travel: " to London",
+  carry: " a heavy bag",
+  try: " a new sport",
+  cry: " during the film",
+  call: " a friend",
+  live: " in a small town",
+  love: " this song",
+  use: " a tablet",
+  move: " the chair",
+  arrive: " at school",
+  learn: " new words",
+  teach: " English",
+  speak: " English",
+  sing: " a song",
+  go: " to the park",
+  do: " homework",
+  have: " breakfast",
+  eat: " pizza",
+  drink: " water",
+  run: " in the park",
+  swim: " in the pool",
+  ride: " a bike",
+  drive: " to school",
+  see: " a rainbow",
+  buy: " a book",
+  bring: " a present",
+  make: " a cake",
+  take: " a photo",
+  give: " a gift",
+  send: " a message",
+  build: " a model",
+  draw: " a picture",
+  break: " a glass",
+  feel: " happy",
+  fall: " on the grass",
+  grow: " tomatoes",
+  keep: " a diary",
+  leave: " the house",
+  lose: " the keys",
+  meet: " a friend",
+  pay: " for lunch",
+  ring: " the bell",
+  rise: " early",
+  sell: " lemonade",
+  sit: " on the sofa",
+  sleep: " on the sofa",
+  stand: " near the window",
+  tell: " a story",
+  think: " about the answer",
+  throw: " a ball",
+  understand: " the rule",
+  wear: " a red jacket",
+  win: " the match",
+  write: " a story",
+  fly: " a kite",
+  catch: " the ball",
+};
+
 const CAT_I = { be: "am", wasWere: "was", doAux: "do", doNeg: "don't", verbForm: (v) => v.base };
 const CAT_S3 = { be: "is", wasWere: "was", doAux: "does", doNeg: "doesn't", verbForm: (v) => v.s };
 const CAT_P2 = { be: "are", wasWere: "were", doAux: "do", doNeg: "don't", verbForm: (v) => v.base };
@@ -106,7 +190,6 @@ const SUBJECTS = [
   { text: "They", cat: CAT_P2 },
   { text: "He", cat: CAT_S3 },
   { text: "She", cat: CAT_S3 },
-  { text: "It", cat: CAT_S3 },
   { text: "Tom", cat: CAT_S3, proper: true },
   { text: "Anna", cat: CAT_S3, proper: true },
   { text: "Grandma", cat: CAT_S3, proper: true },
@@ -116,8 +199,6 @@ const SUBJECTS = [
   { text: "My mom", cat: CAT_S3 },
   { text: "My teacher", cat: CAT_S3 },
   { text: "My best friend", cat: CAT_S3 },
-  { text: "The cat", cat: CAT_S3 },
-  { text: "The dog", cat: CAT_S3 },
   { text: "My parents", cat: CAT_P2 },
   { text: "The children", cat: CAT_P2 },
   { text: "My friends", cat: CAT_P2 },
@@ -126,10 +207,10 @@ const SUBJECTS = [
   { text: "My grandparents", cat: CAT_P2 },
 ];
 
-const PS_PHRASES = ["every day", "every morning", "every weekend", "on Saturdays", "on Sundays", "twice a week", "every summer", "every year", "after school", "before breakfast"];
-const PC_PHRASES = ["right now", "at the moment", "today", "this week", "these days"];
-const PAST_PHRASES = ["yesterday", "last week", "last night", "last weekend", "last year", "a few days ago", "last Friday", "last summer"];
-const PAST_CONT_EVENTS = ["the phone rang", "I arrived", "it started to rain", "she called me", "the teacher walked in", "we saw him", "the lights went out", "my mom came home", "the bell rang", "he knocked on the door", "the music stopped", "it began to snow"];
+const PS_PHRASES = ["every day", "every morning", "every weekend", "on Saturdays", "on Sundays", "twice a week", "after school", "in the evening"];
+const PC_PHRASES = ["right now", "at the moment", "today"];
+const PAST_PHRASES = ["yesterday", "last week", "last weekend", "a few days ago", "last Friday", "after school", "in the evening"];
+const PAST_CONT_EVENTS = ["the phone rang", "it started to rain", "someone walked in", "the lights went out", "someone came home", "the bell rang", "someone knocked on the door", "the music stopped", "it began to snow", "the lesson started"];
 
 function randomChoice(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -155,6 +236,10 @@ function uniq(arr) {
 function lowerSubject(subject) {
   if (subject.proper || subject.text === "I") return subject.text;
   return subject.text.charAt(0).toLowerCase() + subject.text.slice(1);
+}
+
+function complementFor(verb) {
+  return VERB_COMPLEMENTS[verb.base] || "";
 }
 
 function isRegularPast(verb) {
@@ -183,7 +268,7 @@ function makePresentSimple(type) {
     const options = shuffleArray([correct, ...sampleN(wrongPool, 3)]);
     return {
       tense: "presentSimple", type: "mcq",
-      question: `${subject.text} ___ ${phrase}.`,
+      question: `${subject.text} ___${complementFor(verb)} ${phrase}.`,
       options, answer: correct, explanation,
       sig: `presentSimple|mcq|${subject.text}|${verb.base}|${phrase}`,
     };
@@ -196,7 +281,7 @@ function makePresentSimple(type) {
       const alt = subject.cat.doNeg === "doesn't" ? `does not ${verb.base}` : `do not ${verb.base}`;
       return {
         tense: "presentSimple", type: "fill",
-        question: `${subject.text} ___ (not / ${verb.base}) ${phrase}.`,
+        question: `${subject.text} ___ (not / ${verb.base})${complementFor(verb)} ${phrase}.`,
         answer, acceptable: [answer, alt], explanation: "Negative Present Simple: don't/doesn't + base verb.",
         sig: `presentSimple|fill-neg|${subject.text}|${verb.base}|${phrase}`,
       };
@@ -206,23 +291,23 @@ function makePresentSimple(type) {
       const answer = `${subject.cat.doAux} ${subjLower} ${verb.base}`;
       return {
         tense: "presentSimple", type: "fill",
-        question: `___ ${subjLower} ___ (${verb.base}) ${phrase}?`,
+        question: `___ ${subjLower} ___ (${verb.base})${complementFor(verb)} ${phrase}?`,
         answer, acceptable: [answer], explanation: "Questions in Present Simple: Do/Does + subject + base verb.",
         sig: `presentSimple|fill-q|${subject.text}|${verb.base}|${phrase}`,
       };
     }
     return {
       tense: "presentSimple", type: "fill",
-      question: `${subject.text} ___ (${verb.base}) ${phrase}.`,
+      question: `${subject.text} ___ (${verb.base})${complementFor(verb)} ${phrase}.`,
       answer: correct, acceptable: [correct], explanation,
       sig: `presentSimple|fill-aff|${subject.text}|${verb.base}|${phrase}`,
     };
   }
 
   // correction
-  const correctSentence = `${subject.text} ${correct} ${phrase}.`;
+  const correctSentence = `${subject.text} ${correct}${complementFor(verb)} ${phrase}.`;
   const wrongPool = uniq([verb.base, verb.s, verb.ing, verb.past]).filter((c) => c !== correct);
-  const wrongSentences = sampleN(wrongPool, 3).map((f) => `${subject.text} ${f} ${phrase}.`);
+  const wrongSentences = sampleN(wrongPool, 3).map((f) => `${subject.text} ${f}${complementFor(verb)} ${phrase}.`);
   return {
     tense: "presentSimple", type: "correction",
     brokenSentence: wrongSentences[0],
@@ -254,7 +339,7 @@ function makePresentContinuous(type) {
     const options = shuffleArray([correct, ...sampleN(wrongPool, 3)]);
     return {
       tense: "presentContinuous", type: "mcq",
-      question: `${prefix}${subject.text} ___${phraseText}.`,
+      question: `${prefix}${subject.text} ___${complementFor(verb)}${phraseText}.`,
       options, answer: correct, explanation,
       sig: `presentContinuous|mcq|${subject.text}|${verb.base}|${prefix}|${phraseText}`,
     };
@@ -267,7 +352,7 @@ function makePresentContinuous(type) {
       const alt = subject.cat === CAT_I ? `'m not ${verb.ing}` : `${subject.cat.be} not ${verb.ing}`;
       return {
         tense: "presentContinuous", type: "fill",
-        question: `${subject.text} ___ (not / ${verb.base}) right now.`,
+        question: `${subject.text} ___ (not / ${verb.base})${complementFor(verb)} right now.`,
         answer, acceptable: [answer, alt], explanation: "Negative Present Continuous: am/is/are + not + verb-ing.",
         sig: `presentContinuous|fill-neg|${subject.text}|${verb.base}`,
       };
@@ -278,7 +363,7 @@ function makePresentContinuous(type) {
       const answer = `${subject.cat.be} ${subjLower} ${verb.ing}`;
       return {
         tense: "presentContinuous", type: "fill",
-        question: `___ ${subjLower} ___ (${verb.base}) ${phrase}?`,
+        question: `___ ${subjLower} ___ (${verb.base})${complementFor(verb)} ${phrase}?`,
         answer, acceptable: [answer], explanation: "Questions in Present Continuous: Am/Is/Are + subject + verb-ing.",
         sig: `presentContinuous|fill-q|${subject.text}|${verb.base}|${phrase}`,
       };
@@ -286,7 +371,7 @@ function makePresentContinuous(type) {
     const { prefix, phraseText } = presentContinuousFrame();
     return {
       tense: "presentContinuous", type: "fill",
-      question: `${prefix}${subject.text} ___ (${verb.base})${phraseText}.`,
+      question: `${prefix}${subject.text} ___ (${verb.base})${complementFor(verb)}${phraseText}.`,
       answer: correct, acceptable: [correct], explanation,
       sig: `presentContinuous|fill-aff|${subject.text}|${verb.base}|${prefix}|${phraseText}`,
     };
@@ -294,8 +379,8 @@ function makePresentContinuous(type) {
 
   // correction
   const { prefix, phraseText } = presentContinuousFrame();
-  const correctSentence = `${prefix}${subject.text} ${correct}${phraseText}.`;
-  const wrongSentences = sampleN(wrongPool, 3).map((f) => `${prefix}${subject.text} ${f}${phraseText}.`);
+  const correctSentence = `${prefix}${subject.text} ${correct}${complementFor(verb)}${phraseText}.`;
+  const wrongSentences = sampleN(wrongPool, 3).map((f) => `${prefix}${subject.text} ${f}${complementFor(verb)}${phraseText}.`);
   return {
     tense: "presentContinuous", type: "correction",
     brokenSentence: wrongSentences[0],
@@ -321,7 +406,7 @@ function makePastSimple(type) {
     const options = shuffleArray([correct, ...sampleN(wrongPool, Math.min(3, wrongPool.length))]);
     return {
       tense: "pastSimple", type: "mcq",
-      question: `${subject.text} ___ ${phrase}.`,
+      question: `${subject.text} ___${complementFor(verb)} ${phrase}.`,
       options, answer: correct, explanation,
       sig: `pastSimple|mcq|${subject.text}|${verb.base}|${phrase}`,
     };
@@ -333,7 +418,7 @@ function makePastSimple(type) {
       const answer = `didn't ${verb.base}`;
       return {
         tense: "pastSimple", type: "fill",
-        question: `${subject.text} ___ (not / ${verb.base}) ${phrase}.`,
+        question: `${subject.text} ___ (not / ${verb.base})${complementFor(verb)} ${phrase}.`,
         answer, acceptable: [answer, `did not ${verb.base}`], explanation: "Negative Past Simple: didn't + base verb.",
         sig: `pastSimple|fill-neg|${subject.text}|${verb.base}|${phrase}`,
       };
@@ -343,22 +428,22 @@ function makePastSimple(type) {
       const answer = `did ${subjLower} ${verb.base}`;
       return {
         tense: "pastSimple", type: "fill",
-        question: `___ ${subjLower} ___ (${verb.base}) ${phrase}?`,
+        question: `___ ${subjLower} ___ (${verb.base})${complementFor(verb)} ${phrase}?`,
         answer, acceptable: [answer], explanation: "Questions in Past Simple: Did + subject + base verb.",
         sig: `pastSimple|fill-q|${subject.text}|${verb.base}|${phrase}`,
       };
     }
     return {
       tense: "pastSimple", type: "fill",
-      question: `${subject.text} ___ (${verb.base}) ${phrase}.`,
+      question: `${subject.text} ___ (${verb.base})${complementFor(verb)} ${phrase}.`,
       answer: correct, acceptable: [correct], explanation,
       sig: `pastSimple|fill-aff|${subject.text}|${verb.base}|${phrase}`,
     };
   }
 
   // correction
-  const correctSentence = `${subject.text} ${correct} ${phrase}.`;
-  const wrongSentences = sampleN(wrongPool, Math.min(3, wrongPool.length)).map((f) => `${subject.text} ${f} ${phrase}.`);
+  const correctSentence = `${subject.text} ${correct}${complementFor(verb)} ${phrase}.`;
+  const wrongSentences = sampleN(wrongPool, Math.min(3, wrongPool.length)).map((f) => `${subject.text} ${f}${complementFor(verb)} ${phrase}.`);
   return {
     tense: "pastSimple", type: "correction",
     brokenSentence: wrongSentences[0],
@@ -383,7 +468,7 @@ function makePastContinuous(type) {
     const options = shuffleArray([correct, ...sampleN(wrongPool, 3)]);
     return {
       tense: "pastContinuous", type: "mcq",
-      question: `${subject.text} ___ when ${event}.`,
+      question: `${subject.text} ___${complementFor(verb)} when ${event}.`,
       options, answer: correct, explanation,
       sig: `pastContinuous|mcq|${subject.text}|${verb.base}|${event}`,
     };
@@ -395,7 +480,7 @@ function makePastContinuous(type) {
       const answer = `${subject.cat.wasWere}n't ${verb.ing}`;
       return {
         tense: "pastContinuous", type: "fill",
-        question: `${subject.text} ___ (not / ${verb.base}) when ${event}.`,
+        question: `${subject.text} ___ (not / ${verb.base})${complementFor(verb)} when ${event}.`,
         answer, acceptable: [answer, `${subject.cat.wasWere} not ${verb.ing}`], explanation: "Negative Past Continuous: wasn't/weren't + verb-ing.",
         sig: `pastContinuous|fill-neg|${subject.text}|${verb.base}|${event}`,
       };
@@ -405,22 +490,22 @@ function makePastContinuous(type) {
       const answer = `${subject.cat.wasWere} ${subjLower} ${verb.ing}`;
       return {
         tense: "pastContinuous", type: "fill",
-        question: `___ ${subjLower} ___ (${verb.base}) when ${event}?`,
+        question: `___ ${subjLower} ___ (${verb.base})${complementFor(verb)} when ${event}?`,
         answer, acceptable: [answer], explanation: "Questions in Past Continuous: Was/Were + subject + verb-ing.",
         sig: `pastContinuous|fill-q|${subject.text}|${verb.base}|${event}`,
       };
     }
     return {
       tense: "pastContinuous", type: "fill",
-      question: `${subject.text} ___ (${verb.base}) when ${event}.`,
+      question: `${subject.text} ___ (${verb.base})${complementFor(verb)} when ${event}.`,
       answer: correct, acceptable: [correct], explanation,
       sig: `pastContinuous|fill-aff|${subject.text}|${verb.base}|${event}`,
     };
   }
 
   // correction
-  const correctSentence = `${subject.text} ${correct} when ${event}.`;
-  const wrongSentences = sampleN(wrongPool, 3).map((f) => `${subject.text} ${f} when ${event}.`);
+  const correctSentence = `${subject.text} ${correct}${complementFor(verb)} when ${event}.`;
+  const wrongSentences = sampleN(wrongPool, 3).map((f) => `${subject.text} ${f}${complementFor(verb)} when ${event}.`);
   return {
     tense: "pastContinuous", type: "correction",
     brokenSentence: wrongSentences[0],
@@ -439,18 +524,25 @@ const TENSE_BUILDERS = {
 
 const QUESTION_TYPES = ["mcq", "fill", "correction"];
 
-// tenseFilter: a tense key to restrict to (quiz mode), or null for any tense (test mode).
+// tenseFilter is kept for flexibility; the app passes null so every session is mixed.
 function generateQuestions(tenseFilter, count) {
   const tenseKeys = tenseFilter ? [tenseFilter] : Object.keys(TENSES);
   const seen = new Set();
   const result = [];
+  const planned = [];
   const maxAttempts = count * 80;
   let attempts = 0;
 
+  if (!tenseFilter) {
+    tenseKeys.forEach((tenseKey) => planned.push({ tenseKey, type: randomChoice(QUESTION_TYPES) }));
+    QUESTION_TYPES.forEach((type) => planned.push({ tenseKey: randomChoice(tenseKeys), type }));
+  }
+
   while (result.length < count && attempts < maxAttempts) {
     attempts += 1;
-    const tenseKey = randomChoice(tenseKeys);
-    const type = randomChoice(QUESTION_TYPES);
+    const next = planned.shift();
+    const tenseKey = next ? next.tenseKey : randomChoice(tenseKeys);
+    const type = next ? next.type : randomChoice(QUESTION_TYPES);
     const q = TENSE_BUILDERS[tenseKey](type);
     if (seen.has(q.sig)) continue;
     seen.add(q.sig);

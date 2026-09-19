@@ -33,24 +33,20 @@ function normalize(text) {
 }
 
 function pickChallenge() {
-  const tenseKeys = Object.keys(TENSES);
   const isQuiz = Math.random() < 0.5;
 
-  let tenseFilter = null;
   let title;
   let count;
 
   if (isQuiz) {
-    const tenseKey = tenseKeys[Math.floor(Math.random() * tenseKeys.length)];
-    tenseFilter = tenseKey;
-    title = `Quiz: ${TENSES[tenseKey]}`;
+    title = "Quiz: Mixed Tenses";
     count = 15;
   } else {
     title = "Test: Mixed Tenses";
     count = 18;
   }
 
-  const questions = generateQuestions(tenseFilter, count);
+  const questions = generateQuestions(null, count);
 
   return { mode: isQuiz ? "quiz" : "test", title, questions };
 }
