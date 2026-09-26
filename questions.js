@@ -325,6 +325,90 @@ function isRegularPast(verb) {
   return candidates.includes(verb.past);
 }
 
+function mutateWord(text, index, replacement) {
+  const words = text.split(/\s+/);
+  const current = words[index];
+  const punctuation = current.match(/[?!.,;:]+$/)?.[0] || "";
+  words[index] = `${replacement}${punctuation}`;
+  return words.join(" ");
+}
+
+function normalizeChoice(value) {
+  return value.toLowerCase().trim().replace(/[.!?]+$/g, "").replace(/\s+/g, " ");
+}
+
+function makeSelectableOptions(question) {
+  const answer = question.answer;
+  const accepted = new Set([answer, ...(question.acceptable || [])].map(normalizeChoice));
+  const candidates = [...accepted].map((value) => {
+    const matching = [answer, ...(question.acceptable || [])].find((item) => normalizeChoice(item) === value);
+    return matching || value;
+  });
+  const answerWords = answer.split(/\s+/);
+  const verbVariants = new Map();
+
+  answerWords.forEach((word, index) => {
+    const bare = word.toLowerCase().replace(/[?!.,;:]+$/g, "");
+    const verb = VERBS.find((item) => [item.base, item.s, item.ing, item.past].includes(bare));
+    if (verb) verbVariants.set(index, [verb.base, verb.s, verb.ing, verb.past]);
+  });
+
+  verbVariants.forEach((forms, index) => {
+    forms.forEach((form) => candidates.push(mutateWord(answer, index, form)));
+  });
+
+  const auxiliaryChoices = {
+    presentSimple: ["do", "does", "don't", "doesn't", "did", "didn't"],
+    presentContinuous: ["am", "is", "are", "was", "were"],
+    pastSimple: ["did", "didn't", "do", "does", "was", "were"],
+    pastContinuous: ["was", "were", "is", "are", "did"],
+    futureSimple: ["will", "won't", "do", "does", "did"],
+  }[question.tense] || [];
+
+  if (answerWords.length > 1) {
+    auxiliaryChoices.forEach((auxiliary) => candidates.push(mutateWord(answer, 0, auxiliary)));
+  }
+
+  if (question.type === "formQuestion" && question.subjectText && answerWords.length > 2) {
+    const subjectWordCount = question.subjectText.split(/\s+/).length;
+    const auxiliary = answerWords[0];
+    const subjectWords = answerWords.slice(1, subjectWordCount + 1).join(" ");
+    const remaining = answerWords.slice(subjectWordCount + 1).join(" ");
+    candidates.push(`${capitalizeFirst(subjectWords)} ${auxiliary.toLowerCase()} ${remaining}`);
+    verbVariants.forEach((forms, index) => {
+      if (index === subjectWordCount + 1) {
+        forms.forEach((form) => candidates.push(mutateWord(answer, index, form)));
+      }
+    });
+  }
+
+  const options = [];
+  const seen = new Set();
+  candidates.forEach((candidate) => {
+    const key = normalizeChoice(candidate);
+    if (!key || seen.has(key)) return;
+    seen.add(key);
+    options.push(candidate);
+  });
+
+  if (options.length < 4) {
+    const fallbackForms = ["do", "does", "did", "will", "am", "is", "are", "was", "were"];
+    fallbackForms.forEach((form) => {
+      if (options.length >= 4 || answerWords.length === 0) return;
+      const candidate = mutateWord(answer, 0, form);
+      const key = normalizeChoice(candidate);
+      if (!seen.has(key) && !accepted.has(key)) {
+        seen.add(key);
+        options.push(candidate);
+      }
+    });
+  }
+
+  const correctOptions = options.filter((option) => accepted.has(normalizeChoice(option)));
+  const distractors = options.filter((option) => !accepted.has(normalizeChoice(option)));
+  return shuffleArray([...correctOptions, ...distractors].slice(0, 4));
+}
+
 function makeFormQuestion(tenseKey) {
   const subject = randomChoice(SUBJECTS);
   const verb = selectVerbFor(tenseKey);
@@ -365,6 +449,8 @@ function makeFormQuestion(tenseKey) {
     tense: tenseKey,
     type: "formQuestion",
     question: `Make a question: ${prompt}`,
+    subjectText: subjLower,
+    baseVerb: verb.base,
     answer,
     acceptable: [answer],
     explanation,
@@ -761,6 +847,9 @@ function generateQuestions(tenseFilter, count, options = {}) {
       type = randomChoice(DRILL_QUESTION_TYPES);
     }
     const q = buildQuestion(tenseKey, type);
+    if (q.type === "fill" || q.type === "formQuestion") {
+      q.options = makeSelectableOptions(q);
+    }
     if (seen.has(q.sig)) continue;
     seen.add(q.sig);
     delete q.sig;

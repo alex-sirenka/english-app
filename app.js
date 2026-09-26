@@ -29,9 +29,9 @@ let state = null;
 
 const TYPE_LABELS = {
   mcq: "choose the correct word",
-  fill: "fill the gap",
+  fill: "choose the verb form for the gap",
   correction: "sentence correction",
-  formQuestion: "forming questions",
+  formQuestion: "choosing the correctly formed question",
   comprehension: "reading comprehension",
 };
 
@@ -163,13 +163,13 @@ function renderQuestion() {
     questionTextEl.textContent = `"${q.brokenSentence}"`;
     renderOptions(q.options, q.answer);
   } else if (q.type === "fill") {
-    questionInstructionEl.textContent = "Type the correct verb form";
+    questionInstructionEl.textContent = "Choose the correct verb form";
     questionTextEl.textContent = q.question;
-    renderFillInput();
+    renderOptions(q.options, q.answer, q.acceptable);
   } else if (q.type === "formQuestion") {
-    questionInstructionEl.textContent = "Form the question";
+    questionInstructionEl.textContent = "Choose the correctly formed question";
     questionTextEl.textContent = q.question;
-    renderFillInput("Type the full question here...");
+    renderOptions(q.options, q.answer, q.acceptable);
   } else if (q.type === "comprehension") {
     questionInstructionEl.textContent = "Read and choose the correct answer";
     questionTextEl.textContent = q.question;
@@ -185,7 +185,8 @@ function renderPassage(text) {
   answerAreaEl.appendChild(passage);
 }
 
-function renderOptions(options, correctAnswer) {
+function renderOptions(options, correctAnswer, acceptable = []) {
+  const correctAnswers = new Set([correctAnswer, ...acceptable].map(normalize));
   options.forEach((optionText) => {
     const btn = document.createElement("button");
     btn.type = "button";
@@ -196,30 +197,14 @@ function renderOptions(options, correctAnswer) {
         b.classList.remove("selected")
       );
       btn.classList.add("selected");
-      recordAnswer(optionText, correctAnswer);
+      recordAnswer(optionText, null, false, correctAnswers.has(normalize(optionText)));
     });
     answerAreaEl.appendChild(btn);
   });
 }
 
-function renderFillInput(placeholder = "Type your answer here...") {
-  const input = document.createElement("input");
-  input.type = "text";
-  input.className = "fill-input";
-  input.placeholder = placeholder;
-  input.addEventListener("input", () => {
-    if (input.value.trim().length > 0) {
-      recordAnswer(input.value, null, true);
-    } else {
-      nextBtn.disabled = true;
-    }
-  });
-  answerAreaEl.appendChild(input);
-  input.focus();
-}
-
-function recordAnswer(givenAnswer, correctAnswer, isFill) {
-  state.pendingAnswer = { givenAnswer, isFill };
+function recordAnswer(givenAnswer, correctAnswer, isFill, isCorrect) {
+  state.pendingAnswer = { givenAnswer, isFill, isCorrect };
   nextBtn.disabled = false;
 }
 
@@ -229,7 +214,9 @@ function evaluateCurrentQuestion() {
   let isCorrect = false;
   let givenAnswer = pending ? pending.givenAnswer : "";
 
-  if (q.type === "fill" || q.type === "formQuestion") {
+  if (pending && typeof pending.isCorrect === "boolean") {
+    isCorrect = pending.isCorrect;
+  } else if (q.type === "fill" || q.type === "formQuestion") {
     const candidates = q.acceptable && q.acceptable.length ? q.acceptable : [q.answer];
     isCorrect = candidates.some((c) => normalize(c) === normalize(givenAnswer));
   } else {
