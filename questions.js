@@ -10,6 +10,16 @@ const TENSES = {
   pastSimple: "Past Simple",
   pastContinuous: "Past Continuous",
   futureSimple: "Future Simple",
+  presentPerfect: "Present Perfect",
+  pastPerfect: "Past Perfect",
+};
+
+const PAST_PARTICIPLES = {
+  speak: "spoken", sing: "sung", go: "gone", eat: "eaten", drink: "drunk",
+  run: "run", swim: "swum", ride: "ridden", drive: "driven", see: "seen",
+  take: "taken", give: "given", draw: "drawn", break: "broken", fall: "fallen",
+  grow: "grown", ring: "rung", rise: "risen", throw: "thrown", wear: "worn",
+  write: "written", fly: "flown",
 };
 
 const VERBS = [
@@ -94,7 +104,7 @@ const VERBS = [
   ["write", "writes", "writing", "wrote"],
   ["fly", "flies", "flying", "flew"],
   ["catch", "catches", "catching", "caught"],
-].map(([base, s, ing, past]) => ({ base, s, ing, past }));
+].map(([base, s, ing, past]) => ({ base, s, ing, past, participle: PAST_PARTICIPLES[base] || past }));
 
 const VERB_COMPLEMENTS = {
   play: " football",
@@ -181,6 +191,49 @@ const VERB_COMPLEMENTS = {
 };
 
 const CAT_I = { be: "am", wasWere: "was", doAux: "do", doNeg: "don't", verbForm: (v) => v.base };
+const LESSON_VERBS = [
+  ["plant", "plants", "planting", "planted", "planted", " vegetables in the garden"],
+  ["grow", "grows", "growing", "grew", "grown", " pumpkins"],
+  ["water", "waters", "watering", "watered", "watered", " the plants"],
+  ["pull", "pulls", "pulling", "pulled", "pulled", " up the weeds"],
+  ["dig", "digs", "digging", "dug", "dug", " a vegetable patch"],
+  ["wave", "waves", "waving", "waved", "waved", " a magic wand"],
+  ["shout", "shouts", "shouting", "shouted", "shouted", " a magic word"],
+  ["chop", "chops", "chopping", "chopped", "chopped", " the pumpkin"],
+  ["peel", "peels", "peeling", "peeled", "peeled", " the potatoes"],
+  ["stir", "stirs", "stirring", "stirred", "stirred", " cream into the soup"],
+  ["share", "shares", "sharing", "shared", "shared", " the pumpkin with friends"],
+  ["change", "changes", "changing", "changed", "changed", " a pumpkin into a helicopter"],
+  ["cook", "cooks", "cooking", "cooked", "cooked", " pumpkin soup"],
+  ["make", "makes", "making", "made", "made", " pumpkin pies and scones"],
+  ["eat", "eats", "eating", "ate", "eaten", " roast pumpkin"],
+  ["buy", "buys", "buying", "bought", "bought", " cabbage and parsnips at the farmers' market"],
+  ["carry", "carries", "carrying", "carried", "carried", " a basket of carrots and spinach"],
+  ["climb", "climbs", "climbing", "climbed", "climbed", " down a giant beanstalk"],
+  ["slide", "slides", "sliding", "slid", "slid", " down the beanstalk"],
+  ["look", "looks", "looking", "looked", "looked", " out of the bathroom window"],
+  ["open", "opens", "opening", "opened", "opened", " the garden gate"],
+  ["find", "finds", "finding", "found", "found", " a snail near the beans"],
+  ["meet", "meets", "meeting", "met", "met", " a friend at the market"],
+  ["help", "helps", "helping", "helped", "helped", " in the garden"],
+  ["finish", "finishes", "finishing", "finished", "finished", " making a table"],
+  ["walk", "walks", "walking", "walked", "walked", " to the park"],
+  ["break", "breaks", "breaking", "broke", "broken", " a cup"],
+  ["ride", "rides", "riding", "rode", "ridden", " on the bus"],
+  ["drive", "drives", "driving", "drove", "driven", " to the store"],
+  ["drink", "drinks", "drinking", "drank", "drunk", " a cup of coffee"],
+  ["swim", "swims", "swimming", "swam", "swum", " across the pool"],
+  ["fix", "fixes", "fixing", "fixed", "fixed", " a car"],
+  ["clean", "cleans", "cleaning", "cleaned", "cleaned", " the room"],
+  ["cook", "cooks", "cooking", "cooked", "cooked", " eggs"],
+  ["eat", "eats", "eating", "ate", "eaten", " pizza"],
+  ["break", "breaks", "breaking", "broke", "broken", " the computer"],
+  ["use", "uses", "using", "used", "used", " the Big Book of Spells"],
+  ["fly", "flies", "flying", "flew", "flown", " in an orange helicopter"],
+  ["get", "gets", "getting", "got", "gotten", " hot"],
+  ["stop", "stops", "stopping", "stopped", "stopped", " working"],
+].map(([base, s, ing, past, participle, complement]) => ({ base, s, ing, past, participle, complement }));
+
 const CAT_S3 = { be: "is", wasWere: "was", doAux: "does", doNeg: "doesn't", verbForm: (v) => v.s };
 const CAT_P2 = { be: "are", wasWere: "were", doAux: "do", doNeg: "don't", verbForm: (v) => v.base };
 
@@ -191,6 +244,7 @@ const SUBJECTS = [
   { text: "They", cat: CAT_P2 },
   { text: "He", cat: CAT_S3 },
   { text: "She", cat: CAT_S3 },
+  { text: "Winnie", cat: CAT_S3, proper: true },
   { text: "Tom", cat: CAT_S3, proper: true },
   { text: "Anna", cat: CAT_S3, proper: true },
   { text: "Grandma", cat: CAT_S3, proper: true },
@@ -215,6 +269,70 @@ const PAST_CONT_EVENTS = ["the phone rang", "it started to rain", "someone walke
 const FUTURE_PHRASES = ["tomorrow", "next week", "next weekend", "soon", "after school", "in the evening"];
 
 const READING_PASSAGES = [
+  {
+    tense: "pastSimple", material: "pumpkin",
+    passage: "Winnie bought vegetables at the farmers' market. Taking them home on her broomstick was difficult, so she decided to make a vegetable patch in her garden.",
+    question: "Why did Winnie decide to grow vegetables?",
+    options: ["They were difficult to carry home", "She disliked vegetables", "The market was closed", "Wilbur lost the basket"],
+    answer: "They were difficult to carry home",
+    explanation: "The vegetables were difficult to bring home on a broomstick.",
+  },
+  {
+    tense: "pastSimple", material: "pumpkin",
+    passage: "Winnie planted seeds, watered her plants, and removed weeds. Snails, rabbits, and caterpillars ate the plants. She tried magic to make the garden grow faster.",
+    question: "What problem did Winnie have in her vegetable patch?",
+    options: ["Creatures ate her plants", "She forgot where her house was", "Her helicopter broke", "There were no seeds"],
+    answer: "Creatures ate her plants",
+    explanation: "Snails, rabbits, and caterpillars ate the growing plants.",
+  },
+  {
+    tense: "pastSimple", material: "pumpkin",
+    passage: "Winnie cooked pies, scones, and soup from a huge pumpkin. She shared the remaining pumpkin with visitors. Later, she used magic to turn the empty shell into a helicopter.",
+    question: "What did Winnie make from the empty pumpkin shell?",
+    options: ["A helicopter", "A wheelbarrow", "A broomstick", "A basket"],
+    answer: "A helicopter",
+    explanation: "The shell became a helicopter, not a house or a coach.",
+  },
+  {
+    tense: "pastContinuous", material: "pumpkin",
+    passage: "The vegetables were growing around Winnie's house while she was indoors. Leaves were covering the windows, and a giant cabbage was blocking the door.",
+    question: "What was blocking the door?",
+    options: ["A giant cabbage", "A bowl of soup", "A broomstick", "A wheelbarrow"],
+    answer: "A giant cabbage",
+    explanation: "Was blocking describes the cabbage in the way of the door.",
+  },
+  {
+    tense: "presentSimple", material: "pumpkin",
+    passage: "Winnie enjoys broccoli, cauliflower, peas, and parsnips. Roast pumpkin is her favourite. Wilbur prefers pumpkin soup with plenty of cream.",
+    question: "What does Wilbur like in his pumpkin soup?",
+    options: ["Cream", "Pumpkin seeds", "Spinach", "Tomatoes"],
+    answer: "Cream",
+    explanation: "Wilbur likes cream stirred into his soup.",
+  },
+  {
+    tense: "presentPerfect", material: "pumpkin",
+    passage: "Winnie has cooked pumpkin soup today. The visitors have taken the leftover pumpkin, but she hasn't changed the empty shell yet. It is still in the garden.",
+    question: "What hasn't Winnie done yet?",
+    options: ["Changed the empty shell", "Cooked pumpkin soup", "Shared the pumpkin", "Met the visitors"],
+    answer: "Changed the empty shell",
+    explanation: "Hasn't changed uses has not + past participle for an action not completed yet.",
+  },
+  {
+    tense: "presentPerfect",
+    passage: "Anna has ridden the bus to the park today. Her friends have walked there. Tom hasn't finished his homework yet, so he is still at home.",
+    question: "Why is Tom still at home?",
+    options: ["He hasn't finished his homework", "He has broken a cup", "He has gone fishing", "He has cleaned the room"],
+    answer: "He hasn't finished his homework",
+    explanation: "Hasn't finished describes unfinished homework with a present result.",
+  },
+  {
+    tense: "pastPerfect", material: "pumpkin",
+    passage: "The pumpkin had broken away from its vine before Winnie finished her spell. The rest of the garden became small again, but the fallen pumpkin stayed enormous.",
+    question: "What had happened before Winnie finished her spell?",
+    options: ["The pumpkin had broken away from the vine", "Winnie had made a helicopter", "Wilbur had eaten all the soup", "The visitors had emptied the shell"],
+    answer: "The pumpkin had broken away from the vine",
+    explanation: "Had + past participle marks the earlier of two past events.",
+  },
   {
     tense: "pastSimple",
     passage: "Mira found a tiny island with golden sand and tall palm trees. She packed her goggles, took a map, and walked to the beach hut.",
@@ -304,15 +422,16 @@ function capitalizeFirst(text) {
 }
 
 function complementFor(verb) {
-  return VERB_COMPLEMENTS[verb.base] || "";
+  return verb.complement || VERB_COMPLEMENTS[verb.base] || "";
 }
 
 function selectVerbFor(tenseKey) {
+  const pool = Math.random() < 0.65 ? LESSON_VERBS : VERBS;
   const awkwardEverywhere = new Set(["grow", "rise", "stop"]);
   const awkwardContinuous = new Set(["feel", "love", "see", "understand"]);
   return randomChoice(
-    VERBS.filter((verb) => {
-      if (awkwardEverywhere.has(verb.base)) return false;
+    pool.filter((verb) => {
+      if (awkwardEverywhere.has(verb.base) && !verb.complement) return false;
       if ((tenseKey === "presentContinuous" || tenseKey === "pastContinuous") && awkwardContinuous.has(verb.base)) return false;
       return true;
     })
@@ -349,8 +468,8 @@ function makeSelectableOptions(question) {
 
   answerWords.forEach((word, index) => {
     const bare = word.toLowerCase().replace(/[?!.,;:]+$/g, "");
-    const verb = VERBS.find((item) => [item.base, item.s, item.ing, item.past].includes(bare));
-    if (verb) verbVariants.set(index, [verb.base, verb.s, verb.ing, verb.past]);
+    const verb = [...VERBS, ...LESSON_VERBS].find((item) => [item.base, item.s, item.ing, item.past, item.participle].includes(bare));
+    if (verb) verbVariants.set(index, [verb.base, verb.s, verb.ing, verb.past, verb.participle]);
   });
 
   verbVariants.forEach((forms, index) => {
@@ -363,6 +482,8 @@ function makeSelectableOptions(question) {
     pastSimple: ["did", "didn't", "do", "does", "was", "were"],
     pastContinuous: ["was", "were", "is", "are", "did"],
     futureSimple: ["will", "won't", "do", "does", "did"],
+    presentPerfect: ["have", "has", "haven't", "hasn't", "had", "did"],
+    pastPerfect: ["had", "hadn't", "have", "has", "did"],
   }[question.tense] || [];
 
   if (answerWords.length > 1) {
@@ -438,6 +559,12 @@ function makeFormQuestion(tenseKey) {
     answer = `${capitalizeFirst(subject.cat.wasWere)} ${subjLower} ${verb.ing}${complement} when ${event}?`;
     prompt = `${subject.text} / ${verb.base}${complement} / when ${event}`;
     explanation = "Past Continuous questions use Was/Were + subject + verb-ing.";
+  } else if (tenseKey === "presentPerfect" || tenseKey === "pastPerfect") {
+    const auxiliary = tenseKey === "pastPerfect" ? "Had" : subject.cat === CAT_S3 ? "Has" : "Have";
+    const phrase = tenseKey === "pastPerfect" ? "before the visitors arrived" : "yet";
+    answer = `${auxiliary} ${subjLower} ${verb.participle}${complement} ${phrase}?`;
+    prompt = `${subject.text} / ${verb.base}${complement} / ${phrase}`;
+    explanation = `${TENSES[tenseKey]} questions use ${tenseKey === "pastPerfect" ? "Had" : "Have/Has"} + subject + past participle.`;
   } else {
     const phrase = randomChoice(FUTURE_PHRASES);
     answer = `Will ${subjLower} ${verb.base}${complement} ${phrase}?`;
@@ -448,7 +575,7 @@ function makeFormQuestion(tenseKey) {
   return {
     tense: tenseKey,
     type: "formQuestion",
-    question: `Make a question: ${prompt}`,
+    question: `Make a ${TENSES[tenseKey]} question: ${prompt}`,
     subjectText: subjLower,
     baseVerb: verb.base,
     answer,
@@ -785,20 +912,55 @@ function makeFutureSimple(type) {
   };
 }
 
+function makePresentPerfect(type, tenseKey = "presentPerfect") {
+  const subject = randomChoice(SUBJECTS);
+  const verb = selectVerbFor(tenseKey);
+  const auxiliary = tenseKey === "pastPerfect" ? "had" : subject.cat === CAT_S3 ? "has" : "have";
+  const otherAuxiliary = auxiliary === "has" ? "have" : "has";
+  const negative = Math.random() < 0.4;
+  const correct = `${auxiliary}${negative ? "n't" : ""} ${verb.participle}`;
+  const phrase = tenseKey === "pastPerfect" ? "before the visitors arrived" : negative ? "yet" : "today";
+  const explanation = tenseKey === "pastPerfect"
+    ? `Past Perfect uses had + past participle (${verb.base}: ${verb.participle}) for an action before another past event. Use hadn't for negatives.`
+    : `Present Perfect uses have/has + past participle (${verb.base}: ${verb.participle}). Use haven't/hasn't for negatives; no finished past time such as yesterday.`;
+  const wrongPool = uniq([
+    `${otherAuxiliary}${negative ? "n't" : ""} ${verb.participle}`,
+    `${auxiliary}${negative ? "n't" : ""} ${verb.base}`,
+    `${auxiliary}${negative ? "n't" : ""} ${verb.past}`,
+    `${auxiliary}${negative ? "n't" : ""} ${verb.ing}`,
+  ]).filter((form) => form !== correct);
+  const question = `${subject.text} ___${type === "fill" ? ` (${negative ? "not / " : ""}${verb.base})` : ""}${complementFor(verb)} ${phrase}.`;
+  const sig = `${tenseKey}|${type}|${subject.text}|${verb.base}|${negative}`;
+
+  if (type === "correction") {
+    const answer = `${subject.text} ${correct}${complementFor(verb)} ${phrase}.`;
+    const wrongSentences = sampleN(wrongPool, 3).map((form) => `${subject.text} ${form}${complementFor(verb)} ${phrase}.`);
+    return { tense: tenseKey, type, brokenSentence: wrongSentences[0], answer,
+      options: shuffleArray([answer, ...wrongSentences]), explanation, sig };
+  }
+
+  return { tense: tenseKey, type, question, answer: correct,
+    acceptable: negative ? [correct, `${auxiliary} not ${verb.participle}`] : [correct],
+    options: shuffleArray([correct, ...sampleN(wrongPool, 3)]), explanation, sig };
+}
+
 const TENSE_BUILDERS = {
   presentSimple: makePresentSimple,
   presentContinuous: makePresentContinuous,
   pastSimple: makePastSimple,
   pastContinuous: makePastContinuous,
   futureSimple: makeFutureSimple,
+  presentPerfect: makePresentPerfect,
+  pastPerfect: (type) => makePresentPerfect(type, "pastPerfect"),
 };
 
-function makeComprehensionQuestion(tenseKey) {
-  const matching = READING_PASSAGES.filter((passage) => passage.tense === tenseKey);
+function makeComprehensionQuestion(tenseKey, material) {
+  const matching = READING_PASSAGES.filter((passage) => passage.tense === tenseKey && (!material || passage.material === material));
   const source = randomChoice(matching.length ? matching : READING_PASSAGES);
   return {
     tense: source.tense,
     type: "comprehension",
+    material: source.material,
     passage: source.passage,
     question: source.question,
     options: shuffleArray(source.options),
@@ -808,13 +970,31 @@ function makeComprehensionQuestion(tenseKey) {
   };
 }
 
-const DRILL_QUESTION_TYPES = ["mcq", "fill", "correction", "formQuestion"];
-const QUESTION_TYPES = ["mcq", "fill", "correction", "formQuestion", "comprehension"];
-const RANDOM_QUESTION_TYPES = ["mcq", "fill", "correction", "formQuestion", "mcq", "fill", "correction", "comprehension"];
+function makeSentenceOrderQuestion(tenseKey) {
+  const source = TENSE_BUILDERS[tenseKey]("correction");
+  const words = source.answer.replace(/\.$/, "").split(/\s+/);
+  let scrambled = shuffleArray(words);
+  if (scrambled.join(" ") === words.join(" ")) scrambled = words.slice(1).concat(words[0]);
+  const wrongOrders = [
+    words.slice(1).concat(words[0]),
+    words.slice().reverse(),
+    words.slice(2).concat(words.slice(0, 2)),
+  ].map((order) => `${order.join(" ")}.`);
+  return { ...source, type: "sentenceOrder",
+    question: `Put the words in order (${TENSES[tenseKey]}): ${scrambled.join(" / ")}`,
+    options: shuffleArray([source.answer, ...wrongOrders]),
+    explanation: `A statement places the subject before the verb or auxiliary. ${source.explanation}`,
+    sig: `sentenceOrder|${source.sig}` };
+}
+
+const DRILL_QUESTION_TYPES = ["mcq", "fill", "correction", "formQuestion", "sentenceOrder"];
+const QUESTION_TYPES = ["mcq", "fill", "correction", "formQuestion", "sentenceOrder", "comprehension"];
+const RANDOM_QUESTION_TYPES = ["mcq", "fill", "correction", "formQuestion", "sentenceOrder", "mcq", "fill", "correction", "comprehension"];
 
 function buildQuestion(tenseKey, type) {
   if (type === "comprehension") return makeComprehensionQuestion(tenseKey);
   if (type === "formQuestion") return makeFormQuestion(tenseKey);
+  if (type === "sentenceOrder") return makeSentenceOrderQuestion(tenseKey);
   return TENSE_BUILDERS[tenseKey](type);
 }
 
@@ -829,8 +1009,15 @@ function generateQuestions(tenseFilter, count, options = {}) {
   let attempts = 0;
 
   if (!tenseFilter) {
-    tenseKeys.forEach((tenseKey) => planned.push({ tenseKey, type: randomChoice(DRILL_QUESTION_TYPES) }));
-    QUESTION_TYPES.forEach((type) => planned.push({ tenseKey: randomChoice(tenseKeys), type }));
+    planned.push({ tenseKey: "presentPerfect", type: "fill" });
+    planned.push({ tenseKey: "pastSimple", type: "comprehension", material: "pumpkin" });
+    planned.push({ tenseKey: "presentPerfect", type: "sentenceOrder" });
+    const remainingTypes = shuffleArray(["mcq", "correction", "formQuestion"]);
+    tenseKeys.filter((tenseKey) => tenseKey !== "presentPerfect" && tenseKey !== "pastSimple")
+      .forEach((tenseKey) => planned.push({ tenseKey, type: remainingTypes.shift() || randomChoice(DRILL_QUESTION_TYPES) }));
+    if (focus && tenseKeys.includes(focus.tense) && QUESTION_TYPES.includes(focus.type)) {
+      planned.push({ tenseKey: focus.tense, type: focus.type });
+    }
   }
 
   const maxComprehension = count >= 18 ? 3 : 2;
@@ -846,7 +1033,9 @@ function generateQuestions(tenseFilter, count, options = {}) {
     if (type === "comprehension" && result.filter((q) => q.type === "comprehension").length >= maxComprehension) {
       type = randomChoice(DRILL_QUESTION_TYPES);
     }
-    const q = buildQuestion(tenseKey, type);
+    const q = next?.material === "pumpkin"
+      ? makeComprehensionQuestion("pastSimple", "pumpkin")
+      : buildQuestion(tenseKey, type);
     if (q.type === "fill" || q.type === "formQuestion") {
       q.options = makeSelectableOptions(q);
     }

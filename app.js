@@ -33,6 +33,7 @@ const TYPE_LABELS = {
   correction: "sentence correction",
   formQuestion: "choosing the correctly formed question",
   comprehension: "reading comprehension",
+  sentenceOrder: "sentence word order",
 };
 
 function normalize(text) {
@@ -170,6 +171,10 @@ function renderQuestion() {
     questionInstructionEl.textContent = "Choose the correctly formed question";
     questionTextEl.textContent = q.question;
     renderOptions(q.options, q.answer, q.acceptable);
+  } else if (q.type === "sentenceOrder") {
+    questionInstructionEl.textContent = "Choose the correctly ordered sentence";
+    questionTextEl.textContent = q.question;
+    renderOptions(q.options, q.answer);
   } else if (q.type === "comprehension") {
     questionInstructionEl.textContent = "Read and choose the correct answer";
     questionTextEl.textContent = q.question;
